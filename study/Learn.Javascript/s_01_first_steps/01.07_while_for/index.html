@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+<section>
+  <h1>Repeat until a number entered is &gt; 100</h1>
+  <button id="gt100">Question</button>
+  <hr>
+</section>
+
+<section>
+  <h1>Simple numbers in an interval</h1>
+  <button id="simple">Question</button>
+  <hr>
+</section>
+
+<script>
+
+    document.getElementById("gt100").onclick = function () {
+        var n = 0;
+        while (isNaN(n) || n <= 100) {
+            n = prompt("Enter a number > 100");
+            if (n === null) {
+                break;
+            }
+        }
+    };
+
+    document.getElementById("simple").onclick = function () {
+        var lower = +prompt("Enter lower number", 2);
+        var upper = +prompt("Enter upper number", 10);
+        var results = [];
+        next: for (var i = lower; i <= upper; i++) {
+            for (var j = 2; j < i; j++) {
+                if (i % j == 0) {
+                    continue next;
+                }
+            }
+            results.push(i)
+        }
+        alert(results.join(", "))
+    };
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+  <style>
+    .task {
+      width: 600px;
+      margin: 20px;
+      padding: 10px;
+      box-shadow: black 2px 2px 7px;
+      background-color: #eee;
+    }
+    .task textarea {
+      padding: 3px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<section>
+  <h2>Coffee Machine will not run if it is not enabled</h2>
+  <div class="task">
+    <textarea cols="70" rows="4">
+var coffeeMachine = new CoffeeMachine(10000);
+coffeeMachine.run(); // Error, the coffee machine is off!
+    </textarea>
+    <br/>
+    <button id="task1_error_run">Run!</button>
+  </div>
+  <div class="task">
+    <textarea cols="70" rows="4">
+var coffeeMachine = new CoffeeMachine(10000);
+coffeeMachine.enable();
+coffeeMachine.run(); // ...The coffee is ready!
+    </textarea>
+    <br/>
+    <button id="task1_normal_run">Run!</button>
+  </div>
+
+  <hr>
+</section>
+
+<section>
+  <h2>The Coffee Machine getting stopped when it is being disabled</h2>
+  <div class="task">
+    <textarea cols="70" rows="5">
+var coffeeMachine = new CoffeeMachine(10000);
+coffeeMachine.enable();
+coffeeMachine.run();
+    </textarea>
+    <br/>
+    <button id="task2_finished">Run!</button>
+  </div>
+  <div class="task">
+    <textarea cols="70" rows="6">
+var coffeeMachine = new CoffeeMachine(10000);
+coffeeMachine.enable();
+coffeeMachine.run();
+coffeeMachine.disable(); // stops working, don't alerted about coffee is ready
+    </textarea>
+    <br/>
+    <button id="task2_stopped">Run!</button>
+  </div>
+
+  <hr>
+</section>
+
+<section>
+
+  <h2>Machine the Fridge</h2>
+
+  <div class="task">
+    <textarea cols="70" rows="3">
+var fridge = new Fridge(200);
+fridge.addFood("cutlet"); // error, the fridge is off
+    </textarea>
+    <br/>
+    <button id="task3_fridge1">Run!</button>
+  </div>
+
+  <div class="task">
+    <textarea cols="70" rows="7">
+// create a fridge with power 500 (5 items max)
+var fridge = new Fridge(500);
+fridge.enable();
+fridge.addFood("cutlet");
+fridge.addFood("juice", "green-stuff");
+fridge.addFood("jam", "pie", "cake"); // error, too much food
+    </textarea>
+    <br/>
+    <button id="task3_fridge2">Run!</button>
+  </div>
+
+  <div class="task">
+    <textarea cols="70" rows="14">
+var fridge = new Fridge(500);
+fridge.enable();
+fridge.addFood("cutlet");
+fridge.addFood("juice", "jam");
+
+var fridgeFood = fridge.getFood();
+alert( fridgeFood ); // cutlet, juice, jam
+
+// adding new elements do not influence on the food in the fridge
+fridgeFood.push("fork", "spoon");
+
+alert( fridge.getFood() ); // there are still inside: cutlet, juice, jam
+    </textarea>
+    <br/>
+    <button id="task3_fridge3">Run!</button>
+  </div>
+
+</section>
+
+<section>
+
+  <h2>Adding filtering and removing items into the Machine the Fridge</h2>
+  <div class="task">
+    <textarea cols="70" rows="20">
+var fridge = new Fridge(500);
+fridge.enable();
+fridge.addFood({
+  title: "cutlet",
+  calories: 100
+});
+fridge.addFood({
+  title: "juice",
+  calories: 30
+});
+fridge.addFood({
+  title: "green-stuff",
+  calories: 10
+});
+fridge.addFood({
+  title: "jam",
+  calories: 150
+});
+
+fridge.removeFood("no such food"); // no effect
+alert( fridge.getFood().length ); // 4
+
+var dietItems = fridge.filterFood(function(item) {
+  return item.calories < 50;
+});
+
+dietItems.forEach(function(item) {
+  alert( item.title ); // juice, green-stuff
+  fridge.removeFood(item);
+});
+
+alert( fridge.getFood().length ); // 2
+    </textarea>
+    <br/>
+    <button id="task4_fridge">Run!</button>
+  </div>
+
+</section>
+
+<section>
+
+  <h2>Redefining disable in the Machine the Fridge</h2>
+  <div class="task">
+    <textarea cols="70" rows="5">
+var fridge = new Fridge(500);
+fridge.enable();
+fridge.addFood("couscous");
+fridge.disable(); // error, there is food in the Fridge
+    </textarea>
+    <br/>
+    <button id="task5_fridge">Run!</button>
+  </div>
+
+</section>
+
+<script>
+
+    document.getElementById("task1_error_run").onclick = function () {
+        var coffeeMachine = new task1.CoffeeMachine(10000);
+        coffeeMachine.run(); // Error, the coffee machine is off!
+    };
+
+    document.getElementById("task1_normal_run").onclick = function () {
+        var coffeeMachine = new task1.CoffeeMachine(10000);
+        coffeeMachine.enable();
+        coffeeMachine.run(); // ...The coffee is ready!
+    };
+
+    document.getElementById("task2_finished").onclick = function () {
+        var coffeeMachine = new task2.CoffeeMachine(10000);
+        coffeeMachine.enable();
+        coffeeMachine.run();
+    };
+
+    document.getElementById("task2_stopped").onclick = function () {
+        var coffeeMachine = new task2.CoffeeMachine(10000);
+        coffeeMachine.enable();
+        coffeeMachine.run();
+        coffeeMachine.disable(); // stops working, don't alerted about coffee is ready
+    };
+
+    document.getElementById("task3_fridge1").onclick = function () {
+        var fridge = new task3.Fridge(200);
+        fridge.addFood("cutlet"); // error, the fridge is off
+    };
+
+    document.getElementById("task3_fridge2").onclick = function () {
+        // create a fridge with power 500 (5 items max)
+        var fridge = new task3.Fridge(500);
+        fridge.enable();
+        fridge.addFood("cutlet");
+        fridge.addFood("juice", "green-stuff");
+        fridge.addFood("jam", "pie", "cake"); // error, too much food
+    };
+
+    document.getElementById("task3_fridge3").onclick = function () {
+        var fridge = new task3.Fridge(500);
+        fridge.enable();
+        fridge.addFood("cutlet");
+        fridge.addFood("juice", "jam");
+
+        var fridgeFood = fridge.getFood();
+        alert( fridgeFood ); // cutlet, juice, jam
+
+        // adding new elements do not influence on the food in the fridge
+        fridgeFood.push("fork", "spoon");
+
+        alert( fridge.getFood() ); // there are still inside: cutlet, juice, jam
+    };
+
+    document.getElementById("task4_fridge").onclick = function () {
+        var fridge = new task4.Fridge(500);
+        fridge.enable();
+        fridge.addFood({
+            title: "cutlet",
+            calories: 100
+        });
+        fridge.addFood({
+            title: "juice",
+            calories: 30
+        });
+        fridge.addFood({
+            title: "green-stuff",
+            calories: 10
+        });
+        fridge.addFood({
+            title: "jam",
+            calories: 150
+        });
+
+        fridge.removeFood("no such food"); // no effect
+        alert( fridge.getFood().length ); // 4
+
+        var dietItems = fridge.filterFood(function(item) {
+            return item.calories < 50;
+        });
+
+        dietItems.forEach(function(item) {
+            alert( item.title ); // juice, green-stuff
+            fridge.removeFood(item);
+        });
+
+        alert( fridge.getFood().length ); // 2
+    };
+
+    document.getElementById("task5_fridge").onclick = function () {
+        var fridge = new task5.Fridge(500);
+        fridge.enable();
+        fridge.addFood("couscous");
+        fridge.disable(); // error, there is food in the Fridge
+    };
+
+
+</script>
+
+</body>
+
+</html>

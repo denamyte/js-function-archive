@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+</head>
+
+<body>
+
+<section>
+  <h1>Prints subsequently into the console numbers from 1 to 20, with an interval 100 ms. Uses setInterval. (Open console)</h1>
+  <button id="printNumbersInterval">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Prints subsequently into the console numbers from 1 to 20, with an interval 100 ms. Uses setTimeout. (Open console)</h1>
+  <button id="printNumbersTimeout">Run</button>
+  <br>
+  <hr>
+</section>
+
+
+<script>
+
+    document.getElementById("printNumbersInterval").onclick = function () {
+        printNumbersInterval();
+    };
+
+    document.getElementById("printNumbersTimeout").onclick = function () {
+        printNumbersTimeout();
+    };
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+</head>
+
+<body>
+
+<section>
+  <h1>Coffee Machine</h1>
+  <button id="coffeeMachineRun">Run</button>
+  <button id="coffeeMachineStop">Stop</button>
+
+  <br>
+  <hr>
+</section>
+
+
+<script>
+
+    var machine = new CoffeeMachine(50000);
+    machine.waterAmount = 200;
+
+    document.getElementById("coffeeMachineRun").onclick = function () {
+        machine.run();
+    };
+
+    document.getElementById("coffeeMachineStop").onclick = function () {
+        machine.stop();
+    }
+
+</script>
+
+</body>
+
+</html>

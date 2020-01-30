@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+
+  <style>
+    .task {
+      width: 600px;
+      margin: 20px;
+      padding: 10px;
+      box-shadow: black 2px 2px 7px;
+      background-color: #eee;
+    }
+    .task textarea {
+      padding: 3px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+<section>
+  <h2>Custom FormatError example</h2>
+  <div class="task">
+    <textarea cols="70" rows="9">
+
+let ms = 3000;
+delay(ms).then(() => alert(`resolved after ${ms} milliseconds`));
+    </textarea>
+    <br/>
+    <button id="promiseDelay">Run!</button>
+  </div>
+
+  <hr>
+</section>
+
+<section>
+  <h2>Parallel loading of a urls array using promises</h2>
+  <div class="task">
+    <textarea cols="70" rows="17">
+
+let urls = ['_guest.json', '_user.json'];
+
+let chain = Promise.resolve();
+
+let results = [];
+
+urls.forEach( url => {
+    chain = chain
+        .then(() => httpGet(url))
+        .then(result => results.push(result));
+} );
+
+chain.then(() => alert(results));
+
+    </textarea>
+    <br/>
+    <button id="parallelLoading">Run!</button>
+  </div>
+
+  <hr>
+</section>
+
+<script>
+    document.getElementById("promiseDelay").onclick = function () {
+        let ms = 3000;
+        delay(ms).then(() => alert(`resolved after ${ms} milliseconds`));
+    };
+
+    document.getElementById("parallelLoading").onclick = function () {
+
+        let urls = ['_guest.json', '_user.json'];
+
+        let chain = Promise.resolve();
+
+        let results = [];
+
+        urls.forEach( url => {
+            chain = chain
+                .then(() => httpGet(url))
+                .then(result => results.push(result));
+        } );
+
+        chain.then(() => alert(results));
+
+// // начало цепочки
+//         let chain = Promise.resolve();
+//
+//         let results = [];
+//
+// // в цикле добавляем задачи в цепочку
+//         urls.forEach(function(url) {
+//             chain = chain
+//                 .then(() => httpGet(url))
+//                 .then((result) => {
+//                     results.push(result);
+//                 });
+//         });
+//
+// // в конце — выводим результаты
+//         chain.then(() => {
+//             alert(results);
+//         });
+    }
+
+</script>
+
+</body>
+
+</html>

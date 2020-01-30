@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+</head>
+
+<body>
+
+<section>
+  <h1>Create date and time: February 20, 2012, 03:12</h1>
+  <button id="createDatetime">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>How many seconds has already passed today</h1>
+  <button id="secondsTodayUntilNow">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>How many seconds has left until tomorrow</h1>
+  <button id="secondsUntilTomorrow">Run</button>
+  <br>
+  <hr>
+</section>
+
+<script>
+
+    document.getElementById("createDatetime").onclick = function () {
+        alert(new Date(2012, 1, 20, 3, 12));
+    };
+
+    document.getElementById("secondsTodayUntilNow").onclick = function () {
+        alert(getSecondsTodayUntilNow());
+    }
+
+    document.getElementById("secondsUntilTomorrow").onclick = function () {
+        alert(getSecondsToTomorrow());
+    }
+
+</script>
+
+</body>
+
+</html>

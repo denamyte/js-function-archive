@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+
+  <style>
+    section button:first-of-type {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<section>
+  <h1>Clock realization as one function</h1>
+  <button id="clock1_function_start">Run</button>
+  <br>
+  <button id="clock1_function_stop">Stop</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Clock realization on prototypes</h1>
+  <button id="clock1_proto_start">Run</button>
+  <br>
+  <button id="clock1_proto_stop">Stop</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Extended clock realization</h1>
+  <button id="clock2_start">Run</button>
+  <br>
+  <button id="clock2_stop">Stop</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Extenging the ordinary menu with Animation</h1>
+  <button id="animatingMenu">Run</button>
+  <br>
+  <hr>
+</section>
+
+<script>
+    var clock1_func;
+    document.getElementById("clock1_function_start").onclick = function () {
+        clock1_func = new Clock_1({
+            template: 'h:m:s'
+        });
+        clock1_func.start();
+
+    };
+
+    document.getElementById('clock1_function_stop').onclick = function () {
+        clock1_func.stop();
+    };
+
+    var clock1_proto;
+    document.getElementById("clock1_proto_start").onclick = function () {
+        clock1_proto = new Clock_1_proto({
+            template: 'h:m:s'
+        });
+        clock1_proto.start();
+    };
+
+    document.getElementById('clock1_proto_stop').onclick = function () {
+        clock1_proto.stop();
+    };
+
+    var lowResolutionClock;
+    document.getElementById('clock2_start').onclick = function () {
+        lowResolutionClock = new Clock2_extended({
+            template: 'h:m:s',
+            precision: 10000
+        });
+        lowResolutionClock.start();
+    };
+
+    document.getElementById('clock2_stop').onclick = function () {
+        lowResolutionClock.stop();
+    };
+
+    document.getElementById('animatingMenu').onclick = function () {
+        var menu = new AnimatingMenu();
+
+        menu.showState(); // закрыто
+
+        menu.open();
+        menu.showState(); // анимация
+
+        setTimeout(function() {
+            menu.showState(); // открыто
+
+            menu.close();
+            menu.showState(); // закрыто (закрытие без анимации)
+        }, 1000);
+
+    };
+
+</script>
+
+</body>
+
+</html>

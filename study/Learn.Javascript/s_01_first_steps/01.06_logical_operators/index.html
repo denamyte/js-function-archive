@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+<section>
+  <h1>If an age in [14..90]</h1>
+  <button id="age">Question</button>
+  <hr>
+</section>
+
+<section>
+  <h1>If an age NOT in [14..90]</h1>
+  <button id="ageNot">Question</button>
+  <hr>
+</section>
+
+<script>
+
+    document.getElementById("age").onclick = function () {
+        var age = prompt("Enter your age", 0);
+        if (ageIn(age)) {
+            alert("Yes");
+        } else {
+            alert("No")
+        }
+    };
+
+    document.getElementById("ageNot").onclick = function () {
+        var age = prompt("Enter your age", 0);
+        if (!ageIn(age)) {
+            alert("Yes");
+        } else {
+            alert("No")
+        }
+    };
+
+    var ageIn = function (age) {
+        return age >= 14 && age <= 90;
+    }
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+</head>
+
+<body>
+
+<section>
+  <h1>The styles array</h1>
+  <button id="stylesArray">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>The random element from an array</h1>
+  <button id="randomElement">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>The sum of an array</h1>
+  <button id="arraySum">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>The sum of simple numbers from 1 to 100 (Eratosthenes sieve)</h1>
+  <button id="eratosthenesSieve">Run</button>
+  <br>
+  <hr>
+</section>
+
+<script>
+
+    document.getElementById("stylesArray").onclick = function () {
+        var styles = ['jazz', 'blues'];
+        styles.push('rock\'n\'roll');
+        styles[styles.length - 2] = 'classic';
+        alert(styles.shift());
+        styles.unshift('rap', 'reggae');
+        alert('The result array:\n' + styles);
+    };
+
+    document.getElementById('randomElement').onclick = function () {
+        var fruits = ['apple', 'orange', 'pear', 'lemon'];
+        alert(fruits[randomInRangeIncl(0, fruits.length - 1)]);
+    };
+
+    document.getElementById('arraySum').onclick = function () {
+        var input = true;
+        var ar = [];
+        do {
+            var value = prompt('Input a number', 0);
+            if (isNumeric(value)) {
+                ar.push(+value);
+                continue;
+            }
+            input = false;
+        } while (input);
+        alert(arraySum(ar));
+    };
+
+    document.getElementById('eratosthenesSieve').onclick = function () {
+        var cap = inputUntilNumberWithConditions("Input an integer number", 2, null, true, 3);
+        alert(eratosthenesSieve(cap).reduce(
+            function (previousValue, currentValue) { return previousValue + currentValue; }));
+    }
+
+</script>
+
+</body>
+
+</html>

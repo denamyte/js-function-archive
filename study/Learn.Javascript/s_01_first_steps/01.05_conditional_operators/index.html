@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+<section>
+  <h1>JavaScript official name</h1>
+  <button id="jsName">Question</button>
+</section>
+
+<section>
+  <h1>A number sign</h1>
+  <button id="sign">Question</button>
+</section>
+
+<section>
+  <h1>Login check</h1>
+  <button id="login">Question</button>
+</section>
+
+<script>
+    document.getElementById("jsName").onclick = function () {
+        var trueName = "ECMAScript";
+        var name = prompt("What is JavaScript \"official\" name?");
+        if (name == trueName) {
+            alert("True!")
+        } else {
+            alert('Don\'t you know? It is "' + trueName + '"');
+        }
+    };
+
+    document.getElementById("sign").onclick = function () {
+        var number = +prompt("Enter some number");
+        alert(number < 0 ? -1 :
+            number > 0 ? 1 :
+                0);
+    };
+
+    document.getElementById("login").onclick = function () {
+        var name = prompt("Who is it?", "");
+        if (name === "admin") {
+            var pwd = prompt("Password?", "");
+            if (pwd === "Black Overlord") {
+                alert("Welcome!")
+            } else if (pwd) {
+                alert("The password is incorrect");
+            } else {
+                alert("Login cancelled");
+            }
+        } else if (name) {
+            alert("I do not know you!");
+        } else {
+            alert("Login cancelled");
+        }
+    };
+</script>
+
+</body>
+
+</html>

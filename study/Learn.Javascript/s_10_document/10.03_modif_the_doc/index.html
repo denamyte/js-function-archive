@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+
+  <style>
+    .task {
+      width: 600px;
+      margin: 20px;
+      padding: 10px;
+      box-shadow: black 2px 2px 7px;
+      background-color: #eee;
+    }
+
+    .task textarea {
+      padding: 3px;
+    }
+
+    .calendarHolder table {
+      border-collapse: collapse;
+    }
+
+    .calendarHolder td,
+    .calendarHolder th {
+      border: 1px solid black;
+      padding: 3px;
+      text-align: center;
+    }
+
+    .calendarHolder th {
+      font-weight: bold;
+      background-color: #E6E6E6;
+    }
+
+    .calendarHolder td:nth-child(6), .calendarHolder td:nth-child(7) {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section>
+    <h2>Clearing an element</h2>
+    <div class="task">
+      <textarea cols="70" rows="14">
+
+<!-- 
+  <ol id="elem">
+    <li>Hello</li>
+    <li>World</li>
+  </ol>
+  
+  <script>
+    function clear(elem) { /* your code */ }
+
+    clear(elem); // clears the list
+  </script>
+-->
+      </textarea>
+      <br />
+
+      <h3>Clearing a list</h3>
+      <ol id="elemToClear1" style="border: 1px solid red">
+        <li>Hello</li>
+        <li>World</li>
+        <li>Bye</li>
+        <li>World</li>
+      </ol>
+      <button id="clearElem1">Clear the list!</button>
+
+      <h3>Clearing a div</h3>
+      <div id="elemToClear2" style="border: 1px solid red">
+        Some text
+        <div>First div</div>
+        <div>second div</div>
+      </div>
+      <br>
+      <button id="clearElem2">Clear the div!</button>
+
+    </div>
+
+    <hr>
+  </section>
+
+
+  <section>
+    <h2>Creating a list</h2>
+    <div class="task">
+
+      <h3>Created list</h3>
+      <ul id="elemToCreateList" style="border: 1px solid red">
+      </ul>
+      <button id="createList">Create a list</button>
+      <button id="clearCreatedList">Clear the list</button>
+
+    </div>
+
+    <hr>
+  </section>
+
+
+  <section>
+    <h2>Create a tree from the object</h2>
+    <div class="task">
+      <textarea cols="70" rows="22">
+
+<!--
+let data = {
+  "Fish": {
+    "trout": {},
+    "salmon": {}
+  },
+
+  "Tree": {
+    "Huge": {
+      "sequoia": {},
+      "oak": {}
+    },
+    "Flowering": {
+      "redbud": {},
+      "magnolia": {}
+    }
+  }
+};
+-->
+
+      </textarea>
+      <br />
+
+      <button id="createTree">Create the tree</button>
+      <button id="clearTree">Clear the tree!</button>
+
+      <div id="createTreeContainer"></div>
+
+    </div>
+
+    <hr>
+  </section>
+
+  <section>
+    <h2>Show descendants numbers in a tree</h2>
+    <div class="task">
+      <textarea cols="70" rows="1">
+
+      </textarea>
+      <br />
+
+      <ul id="showDescNumbersUl">
+        <li>Animals
+          <ul>
+            <li>Mammals
+              <ul>
+                <li>Cows</li>
+                <li>Donkeys</li>
+                <li>Dogs</li>
+                <li>Tigers</li>
+              </ul>
+            </li>
+            <li>Other
+              <ul>
+                <li>Snakes</li>
+                <li>Birds</li>
+                <li>Lizards</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Fishes
+          <ul>
+            <li>Aquarium
+              <ul>
+                <li>Guppy</li>
+                <li>Angelfish</li>
+              </ul>
+            </li>
+            <li>Sea
+              <ul>
+                <li>Sea trout</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <button id="showDescNumbers">Show!</button>
+
+    </div>
+
+    <hr>
+  </section>
+
+
+  <section>
+    <h2>Create a calendar</h2>
+    <div class="task">
+      <!-- <textarea cols="70" rows="3">
+        createCalendar(elem, year, month)
+      </textarea> -->
+      <br>
+      <label for="calendarYear">Year </label>
+      <input type="number" min="1900" max="2200" id="calendarYear" value="2019">
+      <br>
+      <label for="calendarMonth">Month </label>
+      <input type="number" min="1" max="12" id="calendarMonth" value="1">
+      
+      <br>
+      <button id="createCalendar">Create Calendar!</button>
+
+      <br>
+      <br>
+
+      <div class="calendarHolder" style="border: 1px solid gray; padding: 5px;"></div>
+
+    </div>
+
+    <hr>
+  </section>
+
+  <script>
+
+    document.getElementById("clearElem1").onclick = function () {
+      let elem = document.getElementById("elemToClear1");
+      clear(elem);
+    };
+    document.getElementById("clearElem2").onclick = function () {
+      let elem = document.getElementById("elemToClear2");
+      clear(elem);
+    };
+
+    document.getElementById("createList").onclick = function () {
+      createList(document.getElementById('elemToCreateList'));
+    };
+    document.getElementById("clearCreatedList").onclick = function () {
+      clear(document.getElementById('elemToCreateList'));
+    };
+
+    let dataCreateTree = {
+      "Fish": {
+        "trout": {},
+        "salmon": {}
+      },
+
+      "Tree": {
+        "Huge": {
+          "sequoia": {},
+          "oak": {}
+        },
+        "Flowering": {
+          "redbud": {},
+          "magnolia": {}
+        }
+      }
+    };
+    document.getElementById("createTree").onclick = function () {
+      createTree(document.getElementById('createTreeContainer'), dataCreateTree);
+    };
+    document.getElementById("clearTree").onclick = function () {
+      clear(document.getElementById('createTreeContainer'));
+    };
+
+    document.getElementById("showDescNumbers").onclick = function () {
+      let ul = document.getElementById("showDescNumbersUl");
+      showDescendantsNumbers(ul);
+    }
+
+    document.getElementById("createCalendar").onclick = function () {
+      createCalendarHelper();
+    }
+    function createCalendarHelper() {
+      let elem = document.querySelector(".calendarHolder");
+      clear(elem);
+      let year = document.getElementById("calendarYear").value;
+      let month = document.getElementById("calendarMonth").value;
+      if (year && month) {
+        createCalendar(elem, year, month);
+      }
+    }
+    document.getElementById("calendarYear").addEventListener('change', (event) => {
+      createCalendarHelper();
+    })
+    document.getElementById("calendarMonth").addEventListener('change', (event) => {
+      createCalendarHelper();
+    })
+
+  </script>
+
+</body>
+
+</html>

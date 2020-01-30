@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+</head>
+
+<body>
+
+<section>
+  <h1>Capitalize the first character</h1>
+  <button id="ucFirst">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Check for spam (spam words: 'viagra', 'XXX')</h1>
+  <button id="checkSpam">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Truncating a string</h1>
+  <button id="truncate">Run</button>
+  <br>
+  <hr>
+</section>
+
+<section>
+  <h1>Extract value from a price string, e.g. '$120'</h1>
+  <button id="extractCurrencyValue">Run</button>
+  <br>
+  <hr>
+</section>
+
+<script>
+
+    document.getElementById("ucFirst").onclick = function () {
+        var str = prompt("Input a string");
+        alert(ucFirst(str));
+    };
+
+    document.getElementById("checkSpam").onclick = function () {
+        var result = checkSpam(prompt("Input a string"), ['viagra', 'XXX']);
+        alert(result ? "Spam here!" : "There is no spam here");
+    };
+
+    document.getElementById("truncate").onclick = function () {
+        var str = prompt("Input a string");
+        var maxLength = inputUntilNumberWithConditions("Input max length of the string", 0, null, true, 1);
+        alert(truncate(str, maxLength));
+    };
+
+    document.getElementById("extractCurrencyValue").onclick = function () {
+        var price = prompt("Input a price string with a currency sign, e.g. '$120'");
+        alert(extractCurrencyValue(price));
+    };
+
+
+</script>
+
+</body>
+
+</html>

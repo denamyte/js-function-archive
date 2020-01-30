@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <!-- including Mocha styles, for showing the results -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">
+    <!-- including Mocha library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script>
+    <!-- setting up Mocha: there is BDD-testing to run -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+
+    <!-- including chai -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script>
+    <!-- there are a lot of things in chai, putting assert in the global scope -->
+    <script>
+        var assert = chai.assert;
+    </script>
+</head>
+
+<body>
+
+<!-- A file to be tested here -->
+<script>
+
+</script>
+
+<!-- A file with testing specs here -->
+<script src="test.js"></script>
+
+<!-- there will be the results in the element with id="mocha" -->
+<div id="mocha"></div>
+
+<!-- run tests! -->
+<script>
+    mocha.run();
+</script>
+</body>
+
+</html>

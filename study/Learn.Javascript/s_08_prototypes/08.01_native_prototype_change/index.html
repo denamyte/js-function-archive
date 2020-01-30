@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+</head>
+
+<body>
+
+<section>
+  <h1>Defer in the Function prototype</h1>
+  <button id="functionDefer">Run</button>
+  <br>
+  <hr>
+</section>
+
+<script>
+
+    document.getElementById("functionDefer").onclick = function () {
+        function print() {
+            for (var index in arguments) {
+                console.log(index + ": " + arguments[index]);
+            }
+        }
+
+        addDeferToFunctionPrototype();
+        print.defer1(500)("uno");
+        print.defer1(1000)("dos");
+        print.defer1(1500)("tres");
+        print.defer2(2000)("cuatro");
+        print.defer2(2500)("cinco");
+        print.defer2(3000)("seis");
+    };
+
+</script>
+
+</body>
+
+</html>

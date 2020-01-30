@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+
+  <link rel='stylesheet' href='styles.css'>
+</head>
+
+<body>
+
+<section>
+  <h2>User with setters and a getter</h2>
+  <button id='user_ini'>Run</button>
+  <div id='user_controls'>
+    <input type='text' id='user_name' placeholder='input first name or surname'>
+    <br>
+    <button id='user_add_first_name'>Add First Name</button>
+    <button id='user_add_surname'>Add Surname</button>
+    <br>
+    <input type='text' id='user_full_name'>
+    <br>
+    <button id='user_reset'>Reset</button>
+  </div>
+  <br>
+  <hr>
+</section>
+
+
+<script>
+
+    // User with setters and a getter events ++++++++++++++++++++++++++++++
+
+    var user_getset;
+    elemById("user_ini").onclick = function () {
+        user_getset = new User();
+        userControlsShow(true);
+    };
+
+    elemById('user_reset').onclick = function () {
+        userControlsReset();
+    };
+
+    elemById('user_add_first_name').onclick = function () {
+        userSetName(true);
+    };
+
+    elemById('user_add_surname').onclick = function () {
+        userSetName(false);
+    };
+
+
+    function userSetName(isFirst) {
+        var name;
+        if (isFirst) {
+            name = document.getElementById('user_name').value;
+            user_getset.setFirstName(name);
+        } else {
+            name = document.getElementById('user_name').value;
+            user_getset.setSurname(name);
+        }
+        alert(name);
+        elemById('user_full_name').value = user_getset.getFullName();
+    }
+
+    function userControlsReset() {
+        elemById('user_name').value = '';
+        elemById('user_full_name').value = '';
+        userControlsShow(false);
+    }
+
+    function userControlsShow(onoff) {
+        var style = document.getElementById("user_controls").style;
+        style.display = onoff ? 'block' : 'none';
+    }
+
+
+    // Common functions ****************************************************
+
+    function elemById(id) {
+        var elem = document.getElementById(id);
+        if (elem) return elem;
+        throw new Error("Trying to get element with nonexistent id [" + id + "]")
+    }
+
+
+</script>
+
+</body>
+
+</html>

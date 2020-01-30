@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../utils/utils.js"></script>
+  <script src="code.js"></script>
+
+  <style>
+    /* !Task styles */
+    .task {
+      width: 600px;
+      margin: 20px;
+      padding: 10px;
+      box-shadow: black 2px 2px 7px;
+      background-color: #eee;
+    }
+
+    .task textarea {
+      padding: 3px;
+    }
+    /* !End of task styles */
+
+    .task1 table {
+      border-collapse: collapse;
+    }
+
+    .task1 td {
+      border: 1px solid black;
+      padding: 3px 5px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!--Task template-->
+
+  <!--<section>-->
+    <!--<h2>Some caption</h2>-->
+    <!--<div class="task">-->
+      <!--<textarea cols="70" rows="3">-->
+      <!--</textarea>-->
+      <!--<br />-->
+
+      <!--<button id="task1">Some Task</button>-->
+    <!--</div>-->
+
+  <!--</section>-->
+
+  <section>
+    <h2>Count descendants</h2>
+    <div class="task">
+      <textarea cols="70" rows="3">
+      </textarea>
+      <br />
+
+      <ul>
+        <li>Animals
+          <ul>
+            <li>Mammals
+              <ul>
+                <li>Cows</li>
+                <li>Donkeys</li>
+                <li>Dogs</li>
+                <li>Tigers</li>
+              </ul>
+            </li>
+            <li>Other
+              <ul>
+                <li>Snakes</li>
+                <li>Birds</li>
+                <li>Lizards</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Fishes
+          <ul>
+            <li>Aquarium
+              <ul>
+                <li>Guppy</li>
+                <li>Angelfish</li>
+              </ul>
+            </li>
+            <li>Sea
+              <ul>
+                <li>Sea trout</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <button id="task1">Some Task</button>
+    </div>
+
+  </section>
+
+  <hr>
+
+  <script>
+
+    document.getElementById("task1").onclick = function () {
+
+        task1.scanUl(document.querySelector("ul"));
+        //
+        // /**
+        //  *
+        //  * @param {HTMLUListElement} ul
+        //  */
+        // function scanUl(ul) {
+        //     if (ul.children && ul.children.length) {
+        //         let li = ul.firstElementChild;
+        //         let liCount = 0;
+        //         while (li) {
+        //             liCount += 1 + scanLi(li);
+        //             li = li.nextElementSibling;
+        //         }
+        //         return liCount;
+        //     }
+        // }
+        //
+        // /**
+        //  * @param {HTMLElement) li
+        //  */
+        // function scanLi(li) {
+        //     let textNode = li.firstChild;
+        //     let liCount = 0;
+        //     let ul = li.firstElementChild;
+        //     if (ul) {
+        //         liCount += scanUl(ul);
+        //     }
+        //     console.log(`text: ${textNode.data}; nested count: ${liCount}`);
+        //     return liCount;
+        // }
+    };
+
+
+  </script>
+
+</body>
+
+</html>

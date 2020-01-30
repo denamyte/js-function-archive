@@ -4,7 +4,7 @@
   "description": "JavaScript functions store",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest src/store"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/denamyte/js-function-archive/issues"
   },
-  "homepage": "https://github.com/denamyte/js-function-archive#readme"
+  "homepage": "https://github.com/denamyte/js-function-archive#readme",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
 }

@@ -2,33 +2,45 @@ const timeout = require('./timeout');
 
 jest.useFakeTimers();
 
-// global.console = { log: jest.fn() };
-global.console.log = jest.fn();
+/** @type {jest.Mock} */
+const logMock = console.log = jest.fn();
 const fn = par => {
-  console.log('Function called, par: ' + par);
+  logMock(par);
 };
 
 describe('Testing timeout function', function () {
 
-  it('should run initial functions when they are called within the specified time period', function () {
-    const fn100 = timeout(100, fn);
-    setTimeout(() => {
-      fn100('must_be_called');
-    }, 50);
-
-    // todo: Write a valid test with timeouts
-
-    expect(console.log).toBeCalledTimes(1);
+  beforeEach(() => {
+    logMock.mockClear();
   });
 
-  it('should not run initial functions when they are called after the specified time period has finished', function () {
-    const fn100 = timeout(100, fn);
+  it('should run initial functions when they are called within the specified time period', () => {
+    const fnMsec = 100;
+    const waitMsec = 50;
+    const message = 'must_be_called';
+    const fn100 = timeout(fnMsec, fn);
     setTimeout(() => {
-      fn100('must_not_be_called');
-    }, 150);
+      fn100(message);
+    }, waitMsec);
 
-    // todo: Write a valid test with timeouts
+    expect(logMock).not.toBeCalled();
+    jest.advanceTimersByTime(100000);
+    expect(logMock).not.toBeCalledWith('Timeout reached');
+    expect(logMock).toBeCalledWith(message);
+  });
 
-    expect(console.log).not.toBeCalled();
+  it('should not run initial functions when they are called after the specified time period has passed', () => {
+    const fnMsec = 100;
+    const waitMsec = 150;
+    const message = 'not_to_be_called';
+    const fn100 = timeout(fnMsec, fn);
+    setTimeout(() => {
+      fn100(message);
+    }, waitMsec);
+
+    expect(logMock).not.toBeCalled();
+    jest.advanceTimersByTime(100000);
+    expect(logMock).not.toBeCalledWith(message);
+    expect(logMock).toBeCalledWith('Timeout reached');
   });
 });

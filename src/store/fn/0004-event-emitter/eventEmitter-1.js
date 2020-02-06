@@ -28,7 +28,7 @@ const emitter = () => {
       const event = events[name];
       if (!event) return;
       const i = event.indexOf(f);
-      if (i !== -1) event .splice(i, 1);
+      if (i !== -1) event.splice(i, 1);
     },
     clear: name => {
       if (name) delete events[name];
@@ -46,3 +46,5 @@ const emitter = () => {
   };
   return ee;
 };
+
+module.exports = emitter;

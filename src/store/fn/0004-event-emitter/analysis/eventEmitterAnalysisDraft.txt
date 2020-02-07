@@ -1,0 +1,282 @@
+events:{
+  "e1": [
+    f1,
+    g<f2>
+  ],
+  "e2": [
+    g<f3>
+  ]
+},
+wrapped: {
+  f2: g<f2>
+  f3: g<f3>
+}
+
+on: (name, f, timeout = 0) => {...}
+once: (name, f) => {...}
+remove: (name,  f) => {...}
+
+
+1) on("e1", f1) invoked:
+  - "e1" array is created in "events" map
+  - f1 function is added to "e1" array
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						  ]
+						},
+						wrapped: {
+						}
+
+2) once("e1", f2) invoked:
+  - const g<f2> created
+  - <f2: g<f2>> entry is added to "wrapped" map
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>
+						}
+
+  - invoked on("e1", g<f2>)
+    - "e1" array is received from "events" map
+    - g<f2> function is added to "e1" array
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						    g<f2>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>
+						}
+
+3) once("e2", f3) invoked:
+  - const g<f3> created
+  - <f3: g<f3>> entry is added to "wrapped" map
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						    g<f2>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						  f3: g<f3>
+						}
+
+  - on("e2", g<f3>) invoked:
+    - "e2" array is created in "events" map
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						    g<f2>
+						  ],
+						  "e2": []
+						},
+						wrapped: {
+						  f2: g<f2>,
+						  f3: g<f3>
+						}
+    - g<f3> function is added to "e2" array
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						    g<f2>
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						  f3: g<f3>
+						}
+
+4) emit("e1", data) invoked:
+  - events.get("e1"): ar"e1" received ([f1, g<f2>])
+  - f1(data) invoked: no changes
+  - g<f2>(data) invoked:
+    - remove("e1", g<f2>) invoked:
+      - events.get("e1"): const event = ar"e1" ([f1, g<f2>])
+      - wrapped.get(g<f2>): const g=null
+      - event.indexOf(g<f2>): const i = 1
+      - event.splice(i, 1): g<f2> deleted from ar"e1"
+						STATE:
+						events:{
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						  f3: g<f3>
+						}
+    - f2(data) invoked: no changes
+
+5) remove("e2", f3) invoked:
+  - const event = events.get("e2");
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						  f3: g<f3>
+						}
+						LOCAL:
+						name: "e2",
+						f: f3
+						event: [
+						  g<f3>
+						]
+  if (!event) return: not worked  
+  const g = wrapped.get(f);
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						  f3: g<f3>
+						}
+						LOCAL:
+						name: "e2",
+						f: f3
+						event: [
+						  g<f3>
+						],
+						g = g<f3>
+  if (g) {    
+    wrapped.delete(f);
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						}
+						LOCAL:
+						name: "e2",
+						f: f3
+						event: [
+						  g<f3>
+						],
+						g = g<f3>
+    f = g;         
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						}
+						LOCAL:
+						name: "e2",
+						f: g<f3>
+						event: [
+						  g<f3>
+						],
+						g = g<f3>
+  }
+  let i = event.indexOf(f);
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						    g<f3>
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						}
+						LOCAL:
+						name: "e2",
+						f: g<f3>
+						event: events.e2: [
+						  g<f3>
+						],
+						g: g<f3>
+						i: 0
+  if (i !== -1) {
+    event.splice(i, 1);
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ],
+						  "e2": [
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						}
+						LOCAL:
+						name: "e2",
+						f: g<f3>
+						event: events.e2: [ ],
+						g: g<f3>
+						i: 0
+    if (!event.length) events.delete(name);
+						STATE:
+						events: {
+						  "e1": [
+						    f1,
+						  ]
+						},
+						wrapped: {
+						  f2: g<f2>,
+						}
+						LOCAL:
+						name: "e2",
+						f: g<f3>
+						event: events.e2: [ ],
+						g: g<f3>
+						i: 0
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+

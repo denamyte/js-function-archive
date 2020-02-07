@@ -58,4 +58,6 @@ const emitter = () => {
   return ee;
 };
 
-module.exports = emitter;
+/* Here is the analysis in which a few functions is added to an emitter with "on" and "once"
+
+ */

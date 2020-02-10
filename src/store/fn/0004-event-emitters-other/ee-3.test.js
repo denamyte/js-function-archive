@@ -1,4 +1,4 @@
-const emitter = require('./eventEmitter-3');
+const emitter = require('./ee-3');
 
 const toEmit = () => data => console.dir(data);
 

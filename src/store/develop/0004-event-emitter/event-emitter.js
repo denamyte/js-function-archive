@@ -1,24 +1,46 @@
 'use strict';
 
 /**
- * A function entry. Its instance is being created for any function added into the emitter.
- * It contains an original function and an optional enhanced function (if an original function is being added
+ * Namespace for event emitter types
+ * @namespace ee_types
+ */
+
+/**
+ * Namespace for functions of event emitter
+ * @namespace fn
+ * @memberOf ee_types
+ */
+
+/**
+ * Extended function entry. Its instance is created for any function added into an emitter.
+ * It contains an original function and an optional enhanced function (if an original function is added
  * with some additional conditions). When an event is fired, first the wrapped function is checked: if it exists,
  * it gets called, if not, the original function gets called.
- * @typedef fn_entry
+ * @typedef ee_types.fn_entry
  * @property {string} event The event the original function is subscribed on.
  * @property {function} origin The original function added to an event emitter.
- * @property {number} [callCount] The amount of this function calls remaining. If false, the calls are not limited
+ * @property {number} [callCount] The amount of this function calls remaining. If falsy, the calls are not limited
  * @property {function} [wrapped] A wrapped function.
  */
 
 /**
- *
+ * Function for subscribing on an event
+ * @callback ee_types.fn.on
+ * @param {string} eventName An event name to subscribe on.
+ * @param {function | fn_entry} f A function to be subscribed on an event.
+ * @param {number} timeout A timeout to call
+ * @returns {boolean} `true` if a subscription is added, `false` otherwise
+ */
+
+// todo: describe the other functions of event emitter
+
+/**
+ * Creates an extended function entry.
  * @param {string} event The event the original function is subscribed on.
  * @param {function} origin An original function.
  * @param {number} [callCount] A number of function calls remaining.
  * @param {function} [wrapped] A wrapped function.
- * @returns {fn_entry}
+ * @returns {ee_types.fn_entry}
  */
 const fnEntry = (event, origin, callCount, wrapped) => {
   return {
@@ -59,7 +81,7 @@ const emitter = () => {
      */
     on: (eventName, f, timeout) => {
       const eventAr = events.get(eventName);
-      if (eventAr) {
+      if (eventAr) {  //
         if (findIndex(eventAr, f)) {
           return false;
         }
@@ -142,7 +164,11 @@ const emitter = () => {
      */
     listeners: eventName => {
       const event = events.get(eventName);
-      return event ? event.slice() : [];
+      return !event ? [] : event.slice().map(
+        f => f.origin
+          ? fnEntry(f.event, f.origin, f.callCount, f.wrapped)  // we should return a copy, not a stored function entry
+          : f
+      );
     },
     /**
      * Returns all event names
@@ -150,8 +176,8 @@ const emitter = () => {
      */
     names: () => [...events.keys()]
 
-
-
   };
   return ee;
 };
+
+module.exports = emitter;

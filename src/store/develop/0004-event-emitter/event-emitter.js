@@ -32,7 +32,37 @@
  * @returns {boolean} `true` if a subscription is added, `false` otherwise
  */
 
-// todo: describe the other functions of event emitter
+/**
+ * Adds a subscription with a maximum call count.
+ * @callback ee_types.fn.times
+ * @param {string} eventName The name of an event to subscribe on
+ * @param {function} f A function to be subscribed on an event
+ * @param {number} callCount The maximum amount of times the function can be called. Pass 0 for unlimited calls.
+ * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+ * a function can be called.
+ * @returns {boolean} A flag indicating if the subscription is successful.
+ */
+
+/**
+ * Adds a subscription with only one possible call.
+ * @callback ee_types.fn.once
+ * @param {string} eventName The name of an event to subscribe on
+ * @param {function} f A function to be subscribed on an event
+ * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+ * a function can be called.
+ * @returns {boolean} A flag indicating if the subscription is successful.
+ */
+
+//****************************************************
+
+/**
+ * Event emitter object. This object is returned when emitter function is called.
+ * @typedef ee_types.emitter_object
+ * @property {ee_types.fn.on} on Adds a subscription on a certain event. Returns `true`
+ * if a subscription is added, `false` otherwise.
+ * @property {ee_types.fn.times} times Adds a subscription with a maximum call count.
+ * @property {ee_types.fn.once} once Adds a subscription with only one possible call.
+ */
 
 /**
  * Creates an extended function entry.
@@ -76,7 +106,8 @@ const emitter = () => {
      * Adds a subscription on a certain event. Returns `true` if a subscription is added, `false` otherwise.
      * @param {string} eventName An event name to subscribe on.
      * @param {function | fn_entry} f A function to be subscribed on an event.
-     * @param {number} timeout A timeout to call
+     * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+     * a function can be called.
      * @returns {boolean} `true` if a subscription is added, `false` otherwise
      */
     on: (eventName, f, timeout) => {
@@ -93,16 +124,25 @@ const emitter = () => {
       return true;
     },
     /**
-     * Adds a subscription
-     * @param eventName
-     * @param f
-     * @param callCount
-     * @param timeout
-     * @returns {boolean}
+     * Adds a subscription with a maximum call count
+     * @param {string} eventName The name of an event to subscribe on
+     * @param {function} f A function to be subscribed on an event
+     * @param {number} callCount The maximum amount of times the function can be called. Pass 0 for unlimited calls.
+     * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+     * a function can be called.
+     * @returns {boolean} A flag indicating if the subscription is successful.
      */
     times: (eventName, f, callCount, timeout) => {
       return ee.on(eventName, fnEntry(eventName, f, callCount), timeout);
     },
+    /**
+     * Adds a subscription with only one possible call.
+     * @param {string} eventName The name of an event to subscribe on
+     * @param {function} f A function to be subscribed on an event
+     * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+     * a function can be called.
+     * @returns {boolean} A flag indicating if the subscription is successful.
+     */
     once: (eventName, f, timeout) => {
       return ee.times(eventName, f, 1, timeout);
     },

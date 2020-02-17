@@ -27,8 +27,8 @@
  * Function for subscribing on an event
  * @callback ee_types.fn.on
  * @param {string} eventName An event name to subscribe on.
- * @param {function | fn_entry} f A function to be subscribed on an event.
- * @param {number} timeout A timeout to call
+ * @param {function | ee_types.fn_entry} f A function to be subscribed on an event.
+ * @param {number} [timeout] A timeout to call
  * @returns {boolean} `true` if a subscription is added, `false` otherwise
  */
 
@@ -44,13 +44,48 @@
  */
 
 /**
- * Adds a subscription with only one possible call.
+ * Adds a subscription which can be called only once.
  * @callback ee_types.fn.once
  * @param {string} eventName The name of an event to subscribe on
  * @param {function} f A function to be subscribed on an event
  * @param {number} timeout The length of time period during which, starting from the moment of subscription,
  * a function can be called.
  * @returns {boolean} A flag indicating if the subscription is successful.
+ */
+
+/**
+ * Calls all the functions-listeners of a certain event.
+ * @callback ee_types.fn.emit
+ * @param {string} eventName An event name
+ * @param {any} data Parameters to call each subscribed function with
+ */
+
+/**
+ * Removes a function subscribed to an event. Returns `true` if functions was deleted, `false` otherwise.
+ * @callback ee_types.fn.remove
+ * @param eventName The name of an event
+ * @param f The function to be removed
+ * @returns {boolean} `true` if functions was deleted, `false` otherwise
+ */
+
+/**
+ * Clears the subscriptions on a certain event, or all subscriptions (if eventName parameter is omitted).
+ * @callback ee_types.fn.clear
+ * @param {string} [eventName] An event name
+ */
+
+/**
+ * Returns the amount of subscriptions on an event
+ * @callback ee_types.fn.count
+ * @param {string} eventName An event name
+ * @returns {number}
+ */
+
+/**
+ * Returns the amount of listeners of a certain event
+ * @callback ee_types.fn.listeners
+ * @param {string} eventName An event name
+ * @returns {(Function | fn_entry)[]}
  */
 
 //****************************************************
@@ -62,6 +97,13 @@
  * if a subscription is added, `false` otherwise.
  * @property {ee_types.fn.times} times Adds a subscription with a maximum call count.
  * @property {ee_types.fn.once} once Adds a subscription with only one possible call.
+ * @property {ee_types.fn.emit} emit Calls all the functions-listeners of a certain event.
+ * @property {ee_types.fn.remove} remove Removes a function subscribed to an event. Returns `true`
+ * if functions was deleted, `false` otherwise.
+ * @property {ee_types.fn.clear} clear Clears the subscriptions on a certain event,
+ * or all subscriptions (if eventName parameter is omitted).
+ * @property {ee_types.fn.count} count Returns the amount of subscriptions on an event.
+ * @property {ee_types.fn.listeners} listeners Returns the amount of listeners of a certain event.
  */
 
 /**
@@ -82,16 +124,18 @@ const fnEntry = (event, origin, callCount, wrapped) => {
 };
 
 /**
- *
- * @param {[function | fn_entry]} eventAr
+ * Finds and index of a functions or a wrapper in an array of functions and wrappers.
+ * @see {@link Array#findIndex}
+ * @param {[function | ee_types.fn_entry]} eventAr
  * @param {function} f
+ * @returns {number}
  */
 const findIndex = (eventAr, f) => {
   return eventAr.findIndex(item => item === f || item.origin === f);
 };
 /**
- *
- * @returns {{}}
+ * Returns an event emitter.
+ * @returns {ee_types.emitter_object}
  */
 const emitter = () => {
 
@@ -105,7 +149,7 @@ const emitter = () => {
     /**
      * Adds a subscription on a certain event. Returns `true` if a subscription is added, `false` otherwise.
      * @param {string} eventName An event name to subscribe on.
-     * @param {function | fn_entry} f A function to be subscribed on an event.
+     * @param {function | ee_types.fn_entry} f A function to be subscribed on an event.
      * @param {number} timeout The length of time period during which, starting from the moment of subscription,
      * a function can be called.
      * @returns {boolean} `true` if a subscription is added, `false` otherwise
@@ -113,7 +157,7 @@ const emitter = () => {
     on: (eventName, f, timeout) => {
       const eventAr = events.get(eventName);
       if (eventAr) {  //
-        if (findIndex(eventAr, f)) {
+        if (~findIndex(eventAr, f)) {
           return false;
         }
         eventAr.push(f);
@@ -136,7 +180,7 @@ const emitter = () => {
       return ee.on(eventName, fnEntry(eventName, f, callCount), timeout);
     },
     /**
-     * Adds a subscription with only one possible call.
+     * Adds a subscription which can be called only once.
      * @param {string} eventName The name of an event to subscribe on
      * @param {function} f A function to be subscribed on an event
      * @param {number} timeout The length of time period during which, starting from the moment of subscription,
@@ -152,15 +196,22 @@ const emitter = () => {
      * @param {any} data Parameters to call each subscribed function with
      */
     emit: (eventName, ...data) => {
-      const event = events.get(eventName);
-      if (event) event.forEach(f => {
-        if (f.callCount > 0) {
-          f.callCount--;
-          if (!f.callCount)
-            setTimeout(() => ee.remove(eventName, f), 0);
-        }
-        (f.wrapped || f.origin || f)(...data);
-      });
+      const eventsAr = events.get(eventName);
+      if (eventsAr) {
+        const removeIndices = [];
+        eventsAr.forEach((f, index) => {
+          if (f.callCount && f.callCount > 0) {
+            f.callCount--;
+            if (f.callCount === 0) {
+              removeIndices.unshift(index);
+            }
+          }
+          (f.wrapped || f.origin || f)(...data);
+        });
+        removeIndices.forEach(index => eventsAr.slice(index, 1));
+        if (!eventsAr.length)
+          events.delete(eventName);
+      }
     },
     /**
      * Removes a function subscribed to an event. Returns `true` if functions was deleted, `false` otherwise.

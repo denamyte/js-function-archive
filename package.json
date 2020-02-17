@@ -4,7 +4,7 @@
   "description": "JavaScript functions store",
   "main": "index.js",
   "scripts": {
-    "test": "jest src/store"
+    "test": "jest src/store/develop/0004-event-emitter/event-emitter.test.js"
   },
   "repository": {
     "type": "git",

@@ -88,6 +88,12 @@
  * @returns {(Function | fn_entry)[]}
  */
 
+/**
+ * Returns all event names
+ * @callback ee_types.fn.names
+ * @returns {string[]}
+ */
+
 //****************************************************
 
 /**
@@ -104,6 +110,7 @@
  * or all subscriptions (if eventName parameter is omitted).
  * @property {ee_types.fn.count} count Returns the amount of subscriptions on an event.
  * @property {ee_types.fn.listeners} listeners Returns the amount of listeners of a certain event.
+ * @property {ee_types.fn.names} names Returns all event names.
  */
 
 /**
@@ -208,7 +215,7 @@ const emitter = () => {
           }
           (f.wrapped || f.origin || f)(...data);
         });
-        removeIndices.forEach(index => eventsAr.slice(index, 1));
+        removeIndices.forEach(index => eventsAr.splice(index, 1));
         if (!eventsAr.length)
           events.delete(eventName);
       }

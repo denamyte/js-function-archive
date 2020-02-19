@@ -38,7 +38,7 @@
  * @param {string} eventName The name of an event to subscribe on
  * @param {function} f A function to be subscribed on an event
  * @param {number} callCount The maximum amount of times the function can be called. Pass 0 for unlimited calls.
- * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+ * @param {number} [timeout] The length of time period during which, starting from the moment of subscription,
  * a function can be called.
  * @returns {boolean} A flag indicating if the subscription is successful.
  */
@@ -57,7 +57,7 @@
  * Calls all the functions-listeners of a certain event.
  * @callback ee_types.fn.emit
  * @param {string} eventName An event name
- * @param {any} data Parameters to call each subscribed function with
+ * @param {...*} data Parameters to call each subscribed function with
  */
 
 /**
@@ -204,21 +204,30 @@ const emitter = () => {
      */
     emit: (eventName, ...data) => {
       const eventsAr = events.get(eventName);
-      if (eventsAr) {
-        const removeIndices = [];
-        eventsAr.forEach((f, index) => {
-          if (f.callCount && f.callCount > 0) {
-            f.callCount--;
-            if (f.callCount === 0) {
-              removeIndices.unshift(index);
-            }
+      if (!eventsAr) return;
+      const removeSubs = [];
+      eventsAr.forEach((f, index) => {
+        if (f.callCount && f.callCount > 0) {
+          f.callCount--;
+          if (f.callCount === 0) {
+            removeSubs.push(f);
           }
-          (f.wrapped || f.origin || f)(...data);
-        });
-        removeIndices.forEach(index => eventsAr.splice(index, 1));
-        if (!eventsAr.length)
-          events.delete(eventName);
-      }
+        }
+        (f.wrapped || f.origin || f)(...data);
+      });
+
+      if (!removeSubs.length)
+        return;
+      let lastIndex = 0;
+      removeSubs.forEach(sub => {
+        let foundIndex = eventsAr.indexOf(sub, lastIndex);
+        if (~foundIndex) {
+          lastIndex = foundIndex;
+          eventsAr.splice(foundIndex, 1);
+        }
+      });
+      if (!eventsAr.length)
+        events.delete(eventName);
     },
     /**
      * Removes a function subscribed to an event. Returns `true` if functions was deleted, `false` otherwise.

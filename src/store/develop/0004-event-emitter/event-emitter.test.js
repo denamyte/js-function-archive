@@ -1,5 +1,7 @@
 const emitter = require('./event-emitter.js');
 
+jest.useFakeTimers();
+
 describe('Testing an event emitter in closure', function () {
 
   /**
@@ -8,10 +10,10 @@ describe('Testing an event emitter in closure', function () {
    * @returns {function}
    */
   const genFn = (text) => (text2) => console.log(text2 || text);
-  /** @type {jest.Mock} */
+  /** @type {Mock} */
   const logMock = console.log = jest.fn();
 
-  describe('Testing "times", "once" and "emit" functions of the event emitter', function () {
+  describe('Testing "times", "once" and "emit" methods of the event emitter', function () {
     /** @type {ee_types.emitter_object} */
     let ee;
     beforeEach(() => {
@@ -101,7 +103,7 @@ describe('Testing an event emitter in closure', function () {
     });
   });
 
-  describe('Testing "on" method of the emitter object', function () {
+  describe('Testing "on" method of the emitter emitter', function () {
     /** @type {ee_types.emitter_object} */
     let ee;
     beforeEach(() => {
@@ -109,12 +111,30 @@ describe('Testing an event emitter in closure', function () {
       logMock.mockClear();
     });
 
-    xit('should add a unique listener but should not add an already added listener', function () {
-
+    it('should add a unique listener but should not add an already added listener', function () {
+      const f1 = genFn("f1");
+      const f2 = genFn("f2");
+      const e1 = "e1";
+      ee.on(e1, f1);  // a unique listener added
+      expect(ee.count(e1)).toBe(1);
+      ee.on(e1, f2);  // another unique listener added
+      expect(ee.count(e1)).toBe(2);
+      ee.on(e1, f1);  // NOT unique listener added
+      ee.on(e1, f2);  // another NOT unique listener added
+      expect(ee.count(e1)).toBe(2);
     });
 
-    xit('should add the same listeners only into different events', function () {
-
+    it('should add the same listeners only into different events', function () {
+      const f1 = genFn("f1");
+      const e1 = "e1";
+      const e2 = "e2";
+      ee.on(e1, f1);
+      ee.on(e1, f1);
+      expect(ee.count(e1)).toEqual(1);
+      ee.on(e2, f1);
+      ee.on(e2, f1);
+      expect(ee.count(e2)).toEqual(1);
+      expect(ee.names()).toEqual([e1, e2]);
     });
 
     xit('listeners with a timeout should be unsubscribed when timeout is over', function () {

@@ -24,10 +24,16 @@
  */
 
 /**
+ * A callback-listener for event emitter methods.
+ * @callback ee_types.fn.listener_fn
+ * @param {...*} data
+ */
+
+/**
  * Function for subscribing on an event
  * @callback ee_types.fn.on
  * @param {string} eventName An event name to subscribe on.
- * @param {function | ee_types.fn_entry} f A function to be subscribed on an event.
+ * @param {ee_types.fn.listener_fn | ee_types.fn_entry} f A function to be subscribed on an event.
  * @param {number} [timeout] A timeout to call
  * @returns {boolean} `true` if a subscription is added, `false` otherwise
  */
@@ -36,7 +42,7 @@
  * Adds a subscription with a maximum call count.
  * @callback ee_types.fn.times
  * @param {string} eventName The name of an event to subscribe on
- * @param {function} f A function to be subscribed on an event
+ * @param {ee_types.fn.listener_fn} f A function to be subscribed on an event
  * @param {number} callCount The maximum amount of times the function can be called. Pass 0 for unlimited calls.
  * @param {number} [timeout] The length of time period during which, starting from the moment of subscription,
  * a function can be called.
@@ -47,8 +53,8 @@
  * Adds a subscription which can be called only once.
  * @callback ee_types.fn.once
  * @param {string} eventName The name of an event to subscribe on
- * @param {function} f A function to be subscribed on an event
- * @param {number} timeout The length of time period during which, starting from the moment of subscription,
+ * @param {ee_types.fn.listener_fn} f A function to be subscribed on an event
+ * @param {number} [timeout] The length of time period during which, starting from the moment of subscription,
  * a function can be called.
  * @returns {boolean} A flag indicating if the subscription is successful.
  */
@@ -64,7 +70,7 @@
  * Removes a function subscribed to an event. Returns `true` if functions was deleted, `false` otherwise.
  * @callback ee_types.fn.remove
  * @param eventName The name of an event
- * @param f The function to be removed
+ * @param {ee_types.fn.listener_fn} f The function to be removed
  * @returns {boolean} `true` if functions was deleted, `false` otherwise
  */
 
@@ -116,7 +122,7 @@
 /**
  * Creates an extended function entry.
  * @param {string} event The event the original function is subscribed on.
- * @param {function} origin An original function.
+ * @param {ee_types.fn.listener_fn} origin An original function.
  * @param {number} [callCount] A number of function calls remaining.
  * @param {function} [wrapped] A wrapped function.
  * @returns {ee_types.fn_entry}
@@ -140,6 +146,8 @@ const fnEntry = (event, origin, callCount, wrapped) => {
 const findIndex = (eventAr, f) => {
   return eventAr.findIndex(item => item === f || item.origin === f);
 };
+
+
 /**
  * Returns an event emitter.
  * @returns {ee_types.emitter_object}
@@ -152,11 +160,12 @@ const emitter = () => {
    */
   const events = new Map();
 
+  /** @type {ee_types.emitter_object} */
   const ee = {
     /**
      * Adds a subscription on a certain event. Returns `true` if a subscription is added, `false` otherwise.
      * @param {string} eventName An event name to subscribe on.
-     * @param {function | ee_types.fn_entry} f A function to be subscribed on an event.
+     * @param {ee_types.fn.listener_fn | ee_types.fn_entry} f A function to be subscribed on an event.
      * @param {number} timeout The length of time period during which, starting from the moment of subscription,
      * a function can be called.
      * @returns {boolean} `true` if a subscription is added, `false` otherwise
@@ -177,7 +186,7 @@ const emitter = () => {
     /**
      * Adds a subscription with a maximum call count
      * @param {string} eventName The name of an event to subscribe on
-     * @param {function} f A function to be subscribed on an event
+     * @param {ee_types.fn.listener_fn} f A function to be subscribed on an event
      * @param {number} callCount The maximum amount of times the function can be called. Pass 0 for unlimited calls.
      * @param {number} timeout The length of time period during which, starting from the moment of subscription,
      * a function can be called.
@@ -189,7 +198,7 @@ const emitter = () => {
     /**
      * Adds a subscription which can be called only once.
      * @param {string} eventName The name of an event to subscribe on
-     * @param {function} f A function to be subscribed on an event
+     * @param {ee_types.fn.listener_fn} f A function to be subscribed on an event
      * @param {number} timeout The length of time period during which, starting from the moment of subscription,
      * a function can be called.
      * @returns {boolean} A flag indicating if the subscription is successful.
@@ -200,7 +209,7 @@ const emitter = () => {
     /**
      * Calls all the functions-listeners of a certain event.
      * @param {string} eventName An event name
-     * @param {any} data Parameters to call each subscribed function with
+     * @param {...*} data Parameters to call each subscribed function with
      */
     emit: (eventName, ...data) => {
       const eventsAr = events.get(eventName);
@@ -232,7 +241,7 @@ const emitter = () => {
     /**
      * Removes a function subscribed to an event. Returns `true` if functions was deleted, `false` otherwise.
      * @param eventName The name of an event
-     * @param f The function to be removed
+     * @param {ee_types.fn.listener_fn} f The function to be removed
      * @returns {boolean} `true` if functions was deleted, `false` otherwise
      */
     remove: (eventName, f) => {

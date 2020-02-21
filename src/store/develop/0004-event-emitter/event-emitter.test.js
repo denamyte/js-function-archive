@@ -4,6 +4,12 @@ jest.useFakeTimers();
 
 describe('Testing an event emitter in closure', function () {
 
+  /** @type {ee_types.emitter_object} */
+  let ee;
+  beforeEach(() => {
+    ee = emitter();
+    logMock.mockClear();
+  });
   /**
    * Generates a function logging this function parameter
    * @param text
@@ -14,12 +20,7 @@ describe('Testing an event emitter in closure', function () {
   const logMock = console.log = jest.fn();
 
   describe('Testing "times", "once" and "emit" methods of the event emitter', function () {
-    /** @type {ee_types.emitter_object} */
-    let ee;
-    beforeEach(() => {
-      ee = emitter();
-      logMock.mockClear();
-    });
+
     it('"emit" should call normally not wrapped functions', function () {
       const e1 = "event 1";
       const e2 = "event 2";
@@ -44,8 +45,8 @@ describe('Testing an event emitter in closure', function () {
 
     it('"emit" should remove listeners if they were added with ' +
       '"times" or "once" methods, and their counters are expired; it also should delete' +
-      'an event entry from the events map if all listeners on this particular event' +
-      'were deleted', function () {
+      ' an event entry from the events map if all listeners on this particular event' +
+      ' were deleted', function () {
       const e1 = "event 1";
       const calls = [
         [`${e1} calls function 1`, 1],
@@ -104,11 +105,26 @@ describe('Testing an event emitter in closure', function () {
   });
 
   describe('Testing "on" method of the emitter emitter', function () {
-    /** @type {ee_types.emitter_object} */
-    let ee;
-    beforeEach(() => {
-      ee = emitter();
-      logMock.mockClear();
+
+    it('"on" method should return "true" if a listener is added, "false" otherwise', function () {
+      const f1 = genFn("f1");
+      const e1 = "e1";
+
+      expect(ee.listeners(e1)).toEqual([]);
+      let result = ee.on(e1, f1);  // A lister is added
+      expect(ee.listeners(e1)).toEqual([f1]);
+      expect(result).toEqual(true);
+
+      result = ee.on(e1, f1);  // The same lister is not added
+      expect(ee.listeners(e1)).toEqual([f1]);
+      expect(result).toEqual(false);
+
+      ee.remove(e1, f1);  // The listener is removed
+      expect(ee.listeners(e1)).toEqual([]);
+
+      result = ee.on(e1, f1);  // The lister is added again
+      expect(ee.listeners(e1)).toEqual([f1]);
+      expect(result).toEqual(true);
     });
 
     it('should add a unique listener but should not add an already added listener', function () {
@@ -137,8 +153,107 @@ describe('Testing an event emitter in closure', function () {
       expect(ee.names()).toEqual([e1, e2]);
     });
 
-    xit('listeners with a timeout should be unsubscribed when timeout is over', function () {
+    it('listeners with a timeout should be unsubscribed when timeout is over', function () {
+      const
+        fSimple = "fSimple",
+        fTimeout = "fTimeout",
+        e1 = "e1",
+        timeout = 1000;
+      ee.on(e1, genFn(fSimple));
+      ee.on(e1, genFn(fTimeout), timeout);
 
+      ee.emit(e1);
+      expect(ee.count(e1)).toBe(2);
+      expect(logMock).toBeCalledTimes(2);
+      expect(logMock).toHaveBeenLastCalledWith(fTimeout);
+
+      jest.advanceTimersByTime(timeout - 1);
+      expect(ee.count(e1)).toBe(2);
+      ee.emit(e1);
+      expect(logMock).toBeCalledTimes(4);
+      expect(logMock).toHaveBeenLastCalledWith(fTimeout);
+
+      jest.advanceTimersByTime(1);
+      expect(ee.count(e1)).toBe(1);
+      ee.emit(e1);
+      expect(logMock).toBeCalledTimes(5);
+      expect(logMock).toHaveBeenLastCalledWith(fSimple);
     });
   });
+
+  describe('Testing "remove" and "clear" methods of the event emitter', function () {
+
+    it('"remove" method should remove listeners', function () {
+      const
+        fSimple = genFn("fSimple"),
+        fTimeout = genFn("fTimeout"),
+        fTimes = genFn("fTimes"),
+        e1 = "e1";
+
+      ee.on(e1, fSimple);
+      ee.on(e1, fTimeout, 1000);
+      ee.times(e1, fTimes, 10);
+      expect(ee.count(e1)).toEqual(3);
+
+      ee.remove(e1, fTimeout);
+      expect(ee.count(e1)).toEqual(2);
+      let listeners = ee.listeners(e1);
+      expect([listeners[0], listeners[1].origin]).toEqual([fSimple, fTimes]);
+
+      ee.remove(e1, fTimes);
+      expect(ee.count(e1)).toEqual(1);
+      listeners = ee.listeners(e1);
+      expect(listeners).toEqual([fSimple]);
+
+      ee.remove(e1, fSimple);
+      expect(ee.count(e1)).toEqual(0);
+      listeners = ee.listeners(e1);
+      expect(listeners).toEqual([]);
+
+    });
+
+    it('"remove" method should remove an event if its listeners are all gone', function () {
+      const
+        f1 = genFn("f1"),
+        f2 = genFn("f2"),
+        e1 = "e1";
+
+      expect(ee.names()).toEqual([]);
+
+      ee.on(e1, f1);
+      ee.once(e1, f2);
+      expect(ee.names()).toEqual([e1]);
+
+      ee.remove(e1, f1);
+      expect(ee.names()).toEqual([e1]);
+
+      ee.remove(e1, f2);
+      expect(ee.names()).toEqual([]);
+    });
+
+    it('"remove" method should return "true" if the function is removed, "false" otherwise', function () {
+      function check() {
+        let result = ee.remove(e1, f1);
+        expect(result).toEqual(true);
+        result = ee.remove(e1, f1);
+        expect(result).toEqual(false);
+      }
+
+      const
+        f1 = genFn("f1"),
+        e1 = "e1";
+
+      ee.on(e1, f1);
+      check();
+
+      ee.once(e1, f1);
+      check();
+
+      ee.times(e1, f1, 3);
+      check();
+    });
+
+    // todo: test "clear"
+  });
+  
 });

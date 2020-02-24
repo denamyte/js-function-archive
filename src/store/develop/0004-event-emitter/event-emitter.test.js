@@ -2,7 +2,7 @@ const emitter = require('./event-emitter.js');
 
 jest.useFakeTimers();
 
-describe('Testing an event emitter in closure', function () {
+describe('Testing an event emitter in a closure style.', function () {
 
   /** @type {ee_types.emitter_object} */
   let ee;
@@ -15,7 +15,7 @@ describe('Testing an event emitter in closure', function () {
    * @param text
    * @returns {function}
    */
-  const genFn = (text) => (text2) => console.log(text2 || text);
+  const genFn = (text) => (text2) => console.log(text2 || text || "text unavailable");
   /** @type {Mock} */
   const logMock = console.log = jest.fn();
 
@@ -183,6 +183,28 @@ describe('Testing an event emitter in closure', function () {
 
   describe('Testing "remove" and "clear" methods of the event emitter', function () {
 
+    it('"remove" method should return "true" if the function is removed, "false" otherwise', function () {
+      function check() {
+        let result = ee.remove(e1, f1);
+        expect(result).toEqual(true);
+        result = ee.remove(e1, f1);
+        expect(result).toEqual(false);
+      }
+
+      const
+        f1 = genFn("f1"),
+        e1 = "e1";
+
+      ee.on(e1, f1);
+      check();
+
+      ee.once(e1, f1);
+      check();
+
+      ee.times(e1, f1, 3);
+      check();
+    });
+
     it('"remove" method should remove listeners', function () {
       const
         fSimple = genFn("fSimple"),
@@ -229,28 +251,6 @@ describe('Testing an event emitter in closure', function () {
 
       ee.remove(e1, f2);
       expect(ee.names()).toEqual([]);
-    });
-
-    it('"remove" method should return "true" if the function is removed, "false" otherwise', function () {
-      function check() {
-        let result = ee.remove(e1, f1);
-        expect(result).toEqual(true);
-        result = ee.remove(e1, f1);
-        expect(result).toEqual(false);
-      }
-
-      const
-        f1 = genFn("f1"),
-        e1 = "e1";
-
-      ee.on(e1, f1);
-      check();
-
-      ee.once(e1, f1);
-      check();
-
-      ee.times(e1, f1, 3);
-      check();
     });
 
     // todo: test "clear"

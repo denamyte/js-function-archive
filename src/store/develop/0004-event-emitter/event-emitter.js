@@ -239,7 +239,7 @@ const emitter = () => {
         events.delete(eventName);
     },
     /**
-     * Removes a function subscribed to an event. Returns `true` if functions was deleted, `false` otherwise.
+     * Removes one listener of the event. Returns `true` if functions was deleted, otherwise returns `false`.
      * @param eventName The name of an event
      * @param {ee_types.fn.listener_fn} f The function to be removed
      * @returns {boolean} `true` if functions was deleted, `false` otherwise

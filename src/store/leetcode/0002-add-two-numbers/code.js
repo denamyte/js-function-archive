@@ -15,14 +15,10 @@ function ListNode(val, next) {
  * @param {ListNode} l2
  * @return {ListNode}
  */
-var addTwoNumbers = function(l1, l2) {
-    let getVal = function (node) {
-        return node ? node.val : 0;
-    };
-    let getNext = function (node) {
-        return node ? node.next : null;
-    };
-    let add = function (l1, l2, one) {
+const addTwoNumbers = function(l1, l2) {
+    let getVal = node => node ? node.val : 0;
+    let getNext = node => node ? node.next : null;
+    let add = (l1, l2, one) => {
         let sum = getVal(l1) + getVal(l2) + one;
         let next1 = getNext(l1),
             next2 = getNext(l2);
@@ -30,9 +26,12 @@ var addTwoNumbers = function(l1, l2) {
         return new ListNode(
             sum % 10,
             isNext ?
-                add(next1, next2, sum / 10)
+                add(next1, next2, Math.floor(sum / 10))
                 : null);
-        // todo Make a test
     };
     return add(l1, l2, 0);
+};
+
+module.exports = {
+    ListNode, addTwoNumbers
 };

@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/denamyte/js-function-archive#readme",
   "devDependencies": {
-    "jest": "^25.1.0"
+    "jest": "^26.6.0"
   }
 }
